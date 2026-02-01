@@ -296,7 +296,7 @@ onClickOutside(filterWrapperRef, () => {
 
                         </div>
                     </div>
-                    <FilterBtnView class="" text="Показать" />
+                    <FilterBtnView class="" text="Показать" @click="filterButton = false" />
                 </div>
                 <!-- componies selection-->
                 <div class="flex flex-col flex-1" v-if="activeSection === 'company'">
