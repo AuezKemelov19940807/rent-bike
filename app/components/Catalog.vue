@@ -24,7 +24,7 @@ const goToPage = (page: number) => {
 </script>
 
 <template>
-    <div class="mb-8 md:mb-12 relative">
+    <section class="mb-8 pt-8 md:pt-12 md:mb-12 relative" id="catalog">
         <div class="container mx-auto px-4 lg:px-5">
             <!-- filter -->
             <Filter />
@@ -33,7 +33,7 @@ const goToPage = (page: number) => {
             <!-- pagination -->
             <Pagination :current-page="currentPage" :total-pages="totalPages" @page-changed="goToPage" />
         </div>
-    </div>
+    </section>
 </template>
 
 <style scoped lang="css"></style>

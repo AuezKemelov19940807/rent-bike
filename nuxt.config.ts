@@ -18,5 +18,5 @@ export default defineNuxtConfig({
     ],
     langDir: "locales/",
   },
-  modules: ["@nuxtjs/i18n", "nuxt-swiper", "@nuxt/ui"],
+  modules: ["@nuxtjs/i18n", "nuxt-swiper", "@nuxt/ui", "nuxt-anchorscroll"],
 });

@@ -5,13 +5,13 @@ import hero3 from '~/assets/img/hero-3.png';
 
 const containerRef = ref(null);
 const hero = useSwiper(containerRef, {
-    effect: 'fade',
+
     loop: true,
     slidesPerView: 1,
-
-    speed: 2500,
+    spaceBetween: 50,
+    speed: 1000,
     autoplay: {
-        delay: 2500,
+        delay: 6000,
 
     },
 
@@ -55,7 +55,7 @@ const slides = ref([
 </script>
 
 <template>
-    <div class="md:max-w-1/2 w-full aspect-[1/0.806]">
+    <div class="md:max-w-1/2 w-full aspect-[1/0.806] relative ">
         <ClientOnly>
             <swiper-container class="h-full min-h-75" ref="containerRef" :init="false"
                 autoplay-disable-on-interaction="false">
@@ -68,8 +68,9 @@ const slides = ref([
                             alt="Hero Image">
                     </div>
                 </swiper-slide>
-                <div class="hero-pagination swiper-pagination absolute z-50 bottom-4 right-6 flex gap-x-2"></div>
+
             </swiper-container>
+            <div class="hero-pagination swiper-pagination absolute z-50 bottom-4 right-6 flex gap-x-2"></div>
         </ClientOnly>
     </div>
 </template>

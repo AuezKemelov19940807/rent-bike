@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
+const { width, height } = useWindowSize()
 const props = defineProps<{
     totalPages: number;
     currentPage: number;
@@ -48,9 +50,15 @@ const pagination = computed(() => {
 
     return pages
 })
+const { scrollToAnchor } = useAnchorScroll()
 
 const changePage = (page: number) => {
     emit('page-changed', page)
+    if (width.value < 768) {
+        scrollToAnchor('catalog')
+    }
+
+
 }
 
 </script>

@@ -15,6 +15,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
     "nuxt": "^4.2.2",
+    "nuxt-anchorscroll": "^1.0.5",
     "nuxt-swiper": "^2.0.1",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
