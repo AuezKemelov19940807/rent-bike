@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+    --color-gray: #C9C9C9;
+    --color-dark-gray: #383838;
+    --color-black: #101010;
+   --shadow-card: 0px 1px 3px 0px #0000004D,
+                 0px 4px 8px 3px #00000026;
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+body,
+html,
+#__nuxt
+{
+    font-family: "Montserrat", sans-serif ;
+    @apply h-full bg-white text-black;
+}
+
+.hero-pagination .swiper-pagination-bullet {
+  background: #D9D9D94D !important;
+  border-radius: 30px !important;
+  opacity: 0.7 !important;;
+  width: 8px !important;; 
+  height: 8px !important;;
+  transition: all 2.5s !important;;
+}
+
+.hero-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background: white !important;;
+  opacity: 1 !important;;
+  width: 20px !important;; 
+  height: 8px !important;; 
+}
+
+
+.details-pagination .swiper-pagination-bullet {
+  background: #D9D9D94D !important;
+  border-radius: 30px !important;
+  opacity: 0.7 !important;;
+  width: 8px !important;; 
+  height: 8px !important;;
+  transition: all 0.3s !important;
+  z-index: 50;
+}
+
+.details-pagination .swiper-pagination-bullet-active {
+  background: white !important;;
+  opacity: 1 !important;;
+  width: 20px !important;; 
+  height: 8px !important;; 
+}
+
+.bg-accented  {
+    background-color: var(--color-gray);
+    height: 2px;
+    cursor: pointer;
+}
+
+.bg-primary {
+    background-color: var(--color-black);
+}
+
+.ring-primary {
+    --tw-ring-color: var(--color-black);
+}
+
+.bg-default {
+    background-color: var(--color-white);
+}
+
+.focus-visible\:outline-primary\/50 {
+    &:focus-visible {
+         outline: none;
+    }
+}
+
+.size-4 {
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
+    cursor: pointer;
+}
+
