@@ -4,7 +4,7 @@ import { useWindowSize } from '@vueuse/core'
 const { width, height } = useWindowSize()
 // filter volume range
 const value = ref<[number, number]>([100, 400]);
-
+const filterWrapperRef = ref<HTMLElement | null>(null)
 // volume label
 const volumeLabel = computed(() => {
     return `${value.value[0]} – ${value.value[1]}`
@@ -29,8 +29,18 @@ const activeTransmission = ref<typeof transmissions[number]>('МКПП');
 
 const activeSection = ref<'main' | 'company' | 'brand' | 'model' | 'type'>('main');
 
+function scrollToTop() {
+    if (width.value < 768 && filterWrapperRef.value) {
+        filterWrapperRef.value.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+
 const openSection = (section: 'main' | 'company' | 'model' | 'type' | 'brand') => {
     activeSection.value = section;
+    if (section === 'main') {
+        scrollToTop(); // прокручиваем наверх
+    }
 }
 
 // companies
@@ -108,7 +118,7 @@ function toggleModel(model: { name: string, brandName: string }) {
     }
 }
 
-const filterWrapperRef = ref<HTMLElement | null>(null)
+
 // filter button
 const filterButton = ref<boolean>(false);
 // toggle filter button
@@ -156,6 +166,8 @@ const displayedBrandsCompact = computed(() => {
 });
 
 
+
+
 </script>
 
 <template>
@@ -199,11 +211,14 @@ const displayedBrandsCompact = computed(() => {
                                             @click.stop="selectedCompanies.length = 0">
                                             <img src="~/assets/img/close-filter.svg" alt="Close Filter Icon">
                                         </span>
-                                        <span v-else @click="openSection('company')"
-                                            class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
-                                            <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
-                                                class="w-full h-full object-contain">
+                                        <span class="w-6 h-6 flex items-center justify-center" v-else
+                                            @click="openSection('company')">
+                                            <span class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
+                                                <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
+                                                    class="w-full h-full object-contain">
+                                            </span>
                                         </span>
+
                                     </div>
                                 </div>
 
@@ -223,7 +238,7 @@ const displayedBrandsCompact = computed(() => {
                                                     {{ item.brandName }}
                                                     <span v-if="item.modelsCount > 0" class="text-gray-400 text-[12px]">
                                                         +{{ item.modelsCount }} {{ item.modelsCount === 1 ? 'модель' :
-                                                        'модели' }}
+                                                            'модели' }}
                                                     </span>
                                                     <span
                                                         v-if="index < displayedBrandsCompact.visibleBrands.length - 1">,
@@ -284,11 +299,14 @@ const displayedBrandsCompact = computed(() => {
                                             @click.stop="selectedTypes.length = 0">
                                             <img src="~/assets/img/close-filter.svg" alt="Close Filter Icon">
                                         </span>
-                                        <span v-else @click="openSection('type')"
-                                            class=" -rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
-                                            <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
-                                                class="w-full h-full object-contain">
+                                        <span class="w-6 h-6 flex items-center justify-center" v-else
+                                            @click="openSection('type')">
+                                            <span class=" -rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
+                                                <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
+                                                    class="w-full h-full object-contain">
+                                            </span>
                                         </span>
+
                                     </div>
                                 </div>
 
@@ -393,7 +411,7 @@ const displayedBrandsCompact = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <FilterBtnView text="Готово" @click="activeSection = 'main'" />
+                    <FilterBtnView text="Готово" @click="openSection('main')" />
                 </div>
                 <!-- types selection -->
                 <div class="flex-1 flex flex-col" v-if="activeSection === 'type'">
@@ -430,7 +448,7 @@ const displayedBrandsCompact = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <FilterBtnView class="" text="Готово" @click="activeSection = 'main'" />
+                    <FilterBtnView class="" text="Готово" @click="openSection('main')" />
                 </div>
                 <!-- brand -->
                 <!-- brand selection -->
@@ -523,7 +541,7 @@ const displayedBrandsCompact = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <FilterBtnView text="Готово" @click="activeSection = 'main'" />
+                    <FilterBtnView text="Готово" @click="openSection('main')" />
                 </div>
 
                 <!-- Model selection -->
@@ -565,7 +583,7 @@ const displayedBrandsCompact = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <FilterBtnView class="" text="Готово" @click="activeSection = 'main'" />
+                    <FilterBtnView class="" text="Готово" @click="openSection('main')" />
                 </div>
             </div>
         </Transition>
