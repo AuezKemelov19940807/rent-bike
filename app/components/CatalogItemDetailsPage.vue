@@ -227,11 +227,17 @@ const toggleDropdown = () => {
                         <span>Цена продажи</span>
                         <span>5699$</span>
                     </div>
-                    <div class="text-lg flex gap-x-3.5 items-center font-semibold ">
-                        <span>Статус</span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#94FFAF]"></span>
-                        <span>Свободен</span>
+                    <div class="flex flex-col md:flex-row items-center gap-y-1 gap-x-4 text-lg font-semibold">
+                        <div class="text-lg flex gap-x-3.5 items-center font-semibold ">
+                            <span>Статус</span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                            <span>Занят</span>
+                        </div>
+                        <span class="bg-green-100 text-green-700 px-4 py-0.5 rounded-full text-sm font-medium ml-2">
+                            Будет доступен с 11 февраля
+                        </span>
                     </div>
+
 
                 </div>
 

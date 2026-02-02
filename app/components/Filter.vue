@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onClickOutside } from '@vueuse/core'
-
+import { useWindowSize } from '@vueuse/core'
+const { width, height } = useWindowSize()
 // filter volume range
 const value = ref<[number, number]>([100, 400]);
 
@@ -16,9 +17,9 @@ const activeCategory = ref<typeof categories[number]>('A');
 
 
 // statuses
-const statuses: string[] = ['Свободен', 'Занят'];
+const statuses: string[] = ['Все', 'Свободен', 'Занят'];
 // active status
-const activeStatus = ref<typeof statuses[number]>('Свободен');
+const activeStatus = ref<typeof statuses[number]>('Все');
 
 
 // transmissions
@@ -74,16 +75,36 @@ function openBrandSection() {
     activeSection.value = 'brand';
 }
 
+const openedMobileBrandIDs = ref<number[]>([])
+
 function openModelSection(brand: typeof brands[number]) {
-    selectedBrand.value = brand;
-    activeSection.value = 'model';
+    if (width.value >= 768) {
+        selectedBrand.value = brand
+        activeSection.value = 'model'
+        return
+    }
+
+    const id = brand.id
+
+    if (openedMobileBrandIDs.value.includes(id)) {
+        openedMobileBrandIDs.value = openedMobileBrandIDs.value.filter(bid => bid !== id)
+    } else {
+        openedMobileBrandIDs.value.push(id)
+    }
 }
 
-function toggleModel(name: string) {
-    if (selectedModels.value.includes(name)) {
-        selectedModels.value = selectedModels.value.filter(m => m !== name);
+function toggleModel(model: { name: string, brandName: string }) {
+    // добавляем бренд, если ещё нет
+    if (!selectedBrands.value.includes(model.brandName)) {
+        selectedBrands.value.push(model.brandName)
+    }
+
+    // переключаем модель
+    const idx = selectedModels.value.indexOf(model.name)
+    if (idx !== -1) {
+        selectedModels.value.splice(idx, 1)
     } else {
-        selectedModels.value.push(name);
+        selectedModels.value.push(model.name)
     }
 }
 
@@ -100,6 +121,39 @@ onClickOutside(filterWrapperRef, () => {
     filterButton.value = false
 })
 
+
+function onBrandClick(brand: any) {
+    if (width.value >= 768) {
+        // desktop — просто выбрать бренд
+        toggleBrand(brand.name)
+    } else {
+        // mobile — открыть модели
+        openModelSection(brand)
+    }
+}
+
+const selectedBrandsWithModelsDetailed = computed(() => {
+    return selectedBrands.value.map(brandName => {
+        const brand = brands.find(b => b.name === brandName)
+        if (!brand) return { brandName, modelsCount: 0 } // <-- теперь объект всегда
+
+        const modelsOfBrand = selectedModels.value.filter(modelName =>
+            brand.models.some(m => m.name === modelName)
+        )
+
+        return { brandName, modelsCount: modelsOfBrand.length }
+    })
+})
+
+const displayedBrandsCompact = computed(() => {
+    const maxVisible = 3; // сколько брендов показывать явно
+    const totalBrands = selectedBrandsWithModelsDetailed.value.length;
+
+    const visibleBrands = selectedBrandsWithModelsDetailed.value.slice(0, maxVisible);
+    const hiddenCount = totalBrands - maxVisible;
+
+    return { visibleBrands, hiddenCount: hiddenCount > 0 ? hiddenCount : 0 };
+});
 
 
 </script>
@@ -164,21 +218,23 @@ onClickOutside(filterWrapperRef, () => {
                                             <p class="text-sm text-gray-500 md:hidden">Марка, модель</p>
 
                                             <template v-if="selectedBrands.length || selectedModels.length">
-                                                <template
-                                                    v-for="(item, index) in [...selectedBrands, ...selectedModels].slice(0, 2)"
-                                                    :key="index">
-                                                    {{ item }}
+                                                <template v-for="(item, index) in displayedBrandsCompact.visibleBrands"
+                                                    :key="item.brandName">
+                                                    {{ item.brandName }}
+                                                    <span v-if="item.modelsCount > 0" class="text-gray-400 text-[12px]">
+                                                        +{{ item.modelsCount }} {{ item.modelsCount === 1 ? 'модель' :
+                                                        'модели' }}
+                                                    </span>
                                                     <span
-                                                        v-if="index === 0 && [...selectedBrands, ...selectedModels].length > 1">,
+                                                        v-if="index < displayedBrandsCompact.visibleBrands.length - 1">,
                                                     </span>
                                                 </template>
 
-                                                <span v-if="[...selectedBrands, ...selectedModels].length > 2"
-                                                    class="text-sm text-gray-500">
-                                                    , +{{ [...selectedBrands, ...selectedModels].length - 2 }} ещё
+                                                <span v-if="displayedBrandsCompact.hiddenCount > 0"
+                                                    class="text-gray-400 text-[12px]">
+                                                    +{{ displayedBrandsCompact.hiddenCount }} ещё
                                                 </span>
                                             </template>
-
                                             <template v-else>
                                                 Марка, модель
                                             </template>
@@ -193,12 +249,14 @@ onClickOutside(filterWrapperRef, () => {
                                             <img src="~/assets/img/close-filter.svg" alt="Close Filter Icon" />
                                         </span>
 
-
-                                        <span v-else @click="openSection('brand')"
-                                            class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
-                                            <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
-                                                class="w-full h-full object-contain" />
+                                        <span class="w-6 h-6 flex items-center justify-center" v-else
+                                            @click="openSection('brand')">
+                                            <span class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0">
+                                                <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
+                                                    class="w-full h-full object-contain" />
+                                            </span>
                                         </span>
+
                                     </div>
 
                                 </div>
@@ -241,7 +299,7 @@ onClickOutside(filterWrapperRef, () => {
                             <LabeledSegmentedControl LabeledSegmentedControl label="Категория прав"
                                 v-model="activeCategory" :options="categories" width-class="w-1/3" />
                             <labeled-segmented-control label="Статус" v-model="activeStatus" :options="statuses"
-                                width-class="w-1/2" />
+                                width-class="w-1/3" />
                             <labeled-segmented-control label="Коробка передач" v-model="activeTransmission"
                                 :options="transmissions" width-class="w-1/3" />
                         </div>
@@ -303,6 +361,16 @@ onClickOutside(filterWrapperRef, () => {
                     <div class="flex-1">
                         <div class="flex items-center justify-between md:justify-center mb-4 md:mb-0"
                             @click="activeSection = 'main'">
+                            <div class="md:flex hidden items-center cursor-pointer gap-x-2 absolute left-6"
+                                @click="activeSection = 'main'">
+                                <span>
+                                    <img class="rotate-90" src="~/assets/img/arrow-bottom.svg" alt="Back Icon">
+                                </span>
+                                <span class="text-sm">
+                                    Назад
+                                </span>
+                            </div>
+
                             <h2 class="text-2xl text-center font-semibold mb-2">Компания</h2>
 
                             <span class="md:hidden">
@@ -332,6 +400,15 @@ onClickOutside(filterWrapperRef, () => {
                     <div class="flex-1">
                         <div class="flex items-center justify-between md:justify-center mb-4 md:mb-0"
                             @click="activeSection = 'main'">
+                            <div class="md:flex hidden items-center cursor-pointer gap-x-2 absolute left-6"
+                                @click="activeSection = 'main'">
+                                <span>
+                                    <img class="rotate-90" src="~/assets/img/arrow-bottom.svg" alt="Back Icon">
+                                </span>
+                                <span class="text-sm">
+                                    Назад
+                                </span>
+                            </div>
                             <h2 class="text-2xl text-center font-semibold mb-2">Тип байка</h2>
 
                             <span class="md:hidden">
@@ -361,6 +438,15 @@ onClickOutside(filterWrapperRef, () => {
                     <div class="flex-1">
                         <div class="flex items-center justify-between md:justify-center mb-4 md:mb-0"
                             @click="activeSection = 'main'">
+                            <div class="md:flex hidden items-center cursor-pointer gap-x-2 absolute left-6"
+                                @click="activeSection = 'main'">
+                                <span>
+                                    <img class="rotate-90" src="~/assets/img/arrow-bottom.svg" alt="Back Icon">
+                                </span>
+                                <span class="text-sm">
+                                    Назад
+                                </span>
+                            </div>
                             <h2 class="text-2xl text-center font-semibold mb-2">Марка</h2>
 
                             <span class="md:hidden">
@@ -370,18 +456,25 @@ onClickOutside(filterWrapperRef, () => {
                         <div class="grid md:grid-cols-3 gap-x-8 gap-y-4 companies-grid">
                             <div v-for="brand in brands" :key="brand.id">
                                 <div class="flex items-center justify-between cursor-pointer pb-4 md:pb-0 border-b md:border-none border-[#d1d5db]"
-                                    @click="toggleBrand(brand.name)">
+                                    @click="onBrandClick(brand)">
                                     <div class="flex items-center gap-x-2">
                                         <span
-                                            class="w-6 h-6 shrink-0 flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
+                                            class="w-6 h-6 shrink-0 hidden md:flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
                                             :class="selectedBrands.includes(brand.name) ? 'bg-black border-black' : 'bg-white border-[#CACACA]'">
                                             <img v-if="selectedBrands.includes(brand.name)" src="~/assets/img/check.svg"
                                                 alt="Check Icon" class="">
                                         </span>
+                                        <span>
+                                            <img :src="brand.icon" :alt="brand.name"
+                                                class="w-5 h-5 flex flex-1 object-contain" />
+                                        </span>
                                         <span class="text-lg">{{ brand.name }}</span>
                                     </div>
                                     <div class="w-6 h-6 flex items-center justify-center">
-                                        <span class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0"
+                                        <span :class="openedMobileBrandIDs.includes(brand.id)
+                                            ? 'rotate-0 md:-rotate-90'
+                                            : '-rotate-90 md:-rotate-90'"
+                                            class="-rotate-90 w-3 h-4 flex items-center justify-center shrink-0 transition-transform duration-300 ease-in-out"
                                             @click.stop="openModelSection(brand)">
                                             <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
                                                 class="w-full h-full object-contain" />
@@ -389,7 +482,43 @@ onClickOutside(filterWrapperRef, () => {
                                     </div>
 
                                 </div>
+                                <!-- Mobile Version -->
+                                <Transition name="collapse">
+                                    <div v-show="openedMobileBrandIDs.includes(brand.id)"
+                                        class="block mt-4 pl-4  md:hidden overflow-hidden">
+                                        <div>
+                                            <span class="pb-4 mb-4 block border-gray-400 border-b" @click="
+                                                activeSection = 'main';
+                                            toggleBrand(brand.name);
+                                            ">Выбрать все</span>
+                                            <div>
+                                                <p class="text-gray-400 mb-4 block">Популярные модели
+                                                </p>
+                                                <div class="flex flex-col gap-y-4">
+                                                    <div v-for="model in brand.models" :key="model.id"
+                                                        class="cursor-pointer pb-4 border-gray-400 border-b">
+                                                        <div class="flex items-center justify-between"
+                                                            @click="toggleModel({ name: model.name, brandName: brand.name })">
+                                                            <div class="flex items-center gap-x-2">
+                                                                <span class="text-base">{{ model.name }}</span>
+                                                            </div>
+                                                            <span
+                                                                class="w-6 h-6 shrink-0 flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
+                                                                :class="selectedModels.includes(model.name)
+                                                                    ? 'bg-black border-black'
+                                                                    : 'bg-white border-[#CACACA]'">
+                                                                <img v-if="selectedModels.includes(model.name)"
+                                                                    src="~/assets/img/check.svg" alt="Check Icon" />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </Transition>
 
                             </div>
                         </div>
@@ -398,10 +527,19 @@ onClickOutside(filterWrapperRef, () => {
                 </div>
 
                 <!-- Model selection -->
-                <div class="flex-1 flex flex-col" v-if="activeSection === 'model' && selectedBrand">
+                <div class="hidden md:flex flex-1  flex-col" v-if="activeSection === 'model' && selectedBrand">
                     <div class="flex-1 h-full ">
                         <div class="flex items-center justify-between md:justify-center mb-4 md:mb-0"
                             @click="activeSection = 'brand'">
+                            <div class="md:flex hidden items-center cursor-pointer gap-x-2 absolute left-6"
+                                @click="activeSection = 'main'">
+                                <span>
+                                    <img class="rotate-90" src="~/assets/img/arrow-bottom.svg" alt="Back Icon">
+                                </span>
+                                <span class="text-sm">
+                                    Назад
+                                </span>
+                            </div>
                             <h2 class="text-2xl text-center font-semibold mb-2">Модели {{ selectedBrand.name }}</h2>
 
                             <span class="md:hidden">
@@ -411,9 +549,10 @@ onClickOutside(filterWrapperRef, () => {
                         <div class="grid md:grid-cols-3 gap-x-8 gap-y-4 companies-grid">
                             <div v-for="model in selectedBrand.models" :key="model.id"
                                 class="cursor-pointer pb-4 md:pb-0 border-b md:border-none border-[#d1d5db]">
-                                <div class="flex items-center justify-between" @click="toggleModel(model.name)">
+                                <div class="flex items-center justify-between"
+                                    @click="toggleModel({ name: model.name, brandName: selectedBrand.name })">
                                     <div class="flex items-center gap-x-2">
-                                        <img :src="model.icon" :alt="model.name" class="w-5 h-5 object-contain" />
+
                                         <span class="text-base">{{ model.name }}</span>
                                     </div>
                                     <span
@@ -480,5 +619,23 @@ onClickOutside(filterWrapperRef, () => {
 .v-leave-from {
     opacity: 1;
     transform: translateY(0);
+}
+
+.collapse-enter-active,
+.collapse-leave-active {
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+    max-height: 0;
+    opacity: 0;
+}
+
+.collapse-enter-to,
+.collapse-leave-from {
+    max-height: 500px;
+    /* должно быть больше реальной высоты */
+    opacity: 1;
 }
 </style>
