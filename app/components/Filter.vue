@@ -188,6 +188,41 @@ function openSectionSmart(section: MobileSection) {
 
 const isMobile = computed(() => width.value < 768)
 
+function toggleAllModelsOfBrand(brand: typeof brands[number]) {
+    const allModelsSelected = brand.models.every(model =>
+        selectedModels.value.includes(model.name)
+    )
+
+    if (allModelsSelected) {
+        // снять все модели бренда
+        selectedModels.value = selectedModels.value.filter(
+            modelName => !brand.models.some(m => m.name === modelName)
+        )
+        // если больше нет выбранных моделей этого бренда — удалить бренд
+        if (!selectedModels.value.some(modelName =>
+            brand.models.some(m => m.name === modelName)
+        )) {
+            selectedBrands.value = selectedBrands.value.filter(b => b !== brand.name)
+        }
+    } else {
+        // добавить все модели бренда
+        brand.models.forEach(model => {
+            if (!selectedModels.value.includes(model.name)) {
+                selectedModels.value.push(model.name)
+            }
+        })
+        // добавить бренд, если ещё нет
+        if (!selectedBrands.value.includes(brand.name)) {
+            selectedBrands.value.push(brand.name)
+        }
+    }
+}
+
+const allModelsSelected = (brand: any) => {
+    return brand.models.every((model: any) =>
+        selectedModels.value.includes(model.name)
+    )
+}
 
 </script>
 
@@ -340,7 +375,7 @@ const isMobile = computed(() => width.value < 768)
                                 <!-- Mobile Version -->
                                 <Transition name="collapse">
                                     <div v-if="openedMobileSections.includes('brand')"
-                                        class="grid md:grid-cols-3 gap-x-8 gap-y-4 companies-grid mt-4">
+                                        class="grid md:grid-cols-3 md:hidden gap-x-8 gap-y-4 companies-grid mt-4">
                                         <div v-for="brand in brands" :key="brand.id">
                                             <div class="flex items-center justify-between cursor-pointer pb-4 md:pb-0 border-b md:border-none border-[#d1d5db]"
                                                 @click="onBrandClick(brand)">
@@ -373,11 +408,19 @@ const isMobile = computed(() => width.value < 768)
                                             <Transition name="collapse">
                                                 <div v-show="openedMobileBrandIDs.includes(brand.id)"
                                                     class="block mt-4 pl-4  md:hidden overflow-hidden">
-                                                    <div>
-                                                        <span class="pb-4 mb-4 block border-gray-400 border-b" @click="
-                                                            activeSection = 'main';
-                                                        toggleBrand(brand.name);
-                                                        ">Выбрать все</span>
+                                                    <div class="">
+                                                        <span
+                                                            class="pb-4 mb-4 flex items-center justify-between border-gray-400 border-b"
+                                                            @click="toggleAllModelsOfBrand(brand)">
+                                                            <span>Выбрать все</span>
+
+                                                            <span
+                                                                class="w-6 h-6 shrink-0 flex items-center justify-center border border-[#CACACA] rounded-lg"
+                                                                :class="allModelsSelected(brand) ? 'bg-black border-black' : 'bg-white border-[#CACACA]'">
+                                                                <img v-if="allModelsSelected(brand)"
+                                                                    src="~/assets/img/check.svg" alt="Check Icon" />
+                                                            </span>
+                                                        </span>
                                                         <div>
                                                             <p class="text-gray-400 mb-4 block">Популярные модели
                                                             </p>
@@ -388,7 +431,7 @@ const isMobile = computed(() => width.value < 768)
                                                                         @click="toggleModel({ name: model.name, brandName: brand.name })">
                                                                         <div class="flex items-center gap-x-2">
                                                                             <span class="text-base">{{ model.name
-                                                                            }}</span>
+                                                                                }}</span>
                                                                         </div>
                                                                         <span
                                                                             class="w-6 h-6 shrink-0 flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
