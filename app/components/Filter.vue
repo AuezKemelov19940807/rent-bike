@@ -253,7 +253,7 @@ const allModelsSelected = (brand: any) => {
                                         @click="openSectionSmart('company')">
                                         <!-- mobile version -->
                                         <span class="flex items-center justify-between text-lg w-full md:hidden">
-                                            <span>
+                                            <span class="font-semibold">
                                                 Компания
                                             </span>
                                             <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
@@ -316,7 +316,7 @@ const allModelsSelected = (brand: any) => {
 
                                         <!-- mobile version -->
                                         <span class="flex items-center justify-between text-lg w-full md:hidden">
-                                            <span>
+                                            <span class="font-semibold">
                                                 Марка, модель
                                             </span>
                                             <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
@@ -431,7 +431,7 @@ const allModelsSelected = (brand: any) => {
                                                                         @click="toggleModel({ name: model.name, brandName: brand.name })">
                                                                         <div class="flex items-center gap-x-2">
                                                                             <span class="text-base">{{ model.name
-                                                                                }}</span>
+                                                                            }}</span>
                                                                         </div>
                                                                         <span
                                                                             class="w-6 h-6 shrink-0 flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
@@ -465,7 +465,7 @@ const allModelsSelected = (brand: any) => {
                                         @click="openSectionSmart('type')">
                                         <!-- Mobile Version -->
                                         <span class="flex items-center justify-between text-lg w-full md:hidden">
-                                            <span>
+                                            <span class="font-semibold">
                                                 Тип байка
                                             </span>
                                             <img src="~/assets/img/arrow-bottom.svg" alt="Arrow"
