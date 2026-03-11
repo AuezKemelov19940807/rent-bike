@@ -238,7 +238,9 @@ const allModelsSelected = (brand: any) => {
                 v-if="filterButton">
                 <div class="flex-1" v-if="activeSection === 'main'">
                     <div class=" flex mb-4 items-center justify-between md:hidden" @click="toggleFilterButton">
-                        <p class="text-2xl font-semibold">Фильтр</p>
+                        <p class="text-2xl font-semibold">
+                            {{ $t('filter') }}
+                        </p>
                         <span>
                             <img src="~/assets/img/close.svg" alt="Close Icon">
                         </span>
@@ -578,7 +580,7 @@ const allModelsSelected = (brand: any) => {
 
                         </div>
                     </div>
-                    <FilterBtnView class="" text="Показать" @click="filterButton = false" />
+                    <FilterBtnView class="" text="Добавить" @click="filterButton = false" />
                 </div>
                 <!-- componies selection-->
                 <div class="flex flex-col flex-1" v-if="activeSection === 'company'">

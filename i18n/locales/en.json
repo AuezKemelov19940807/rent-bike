@@ -1,3 +1,12 @@
 {
-    "welcome": "Hello world!"
+    "welcome": "Hello world!",
+    "title": "Best Motorcycles for Rent",
+    "desc": "The task of the organization, particularly the implementation of planned objectives, plays an important role in shaping the development model. The organization's task, especially its framework and training processes, contributes to the preparation and execution of directions for progressive development.",
+    "NHA_TRANG": "NHA TRANG",
+    "QUI_NHON": "QUI NHON",
+    "TUY_HOA": "TUY HOA",
+    "filter": "Filter",
+    "AVAILABLE": "Available",
+    "BUSY": "Busy",
+    "MAINTENANCE": "Maintenance"
 }

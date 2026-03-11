@@ -5,9 +5,9 @@ const burgerMenu = ref<boolean>(false);
 const burgerDropdownRef = ref<HTMLElement | null>(null);
 const selectedCity = ref('NHA_TRANG')
 const cities = [
-    { code: 'NHA_TRANG', name: 'Нячанг', country: 'VN' },
-    { code: 'QUI_NHON', name: 'Куинён', country: 'VN' },
-    { code: 'TUY_HOA', name: 'Туихоа', country: 'VN' },
+    { code: 'NHA_TRANG', name: 'NHA_TRANG', country: 'VN' },
+    { code: 'QUI_NHON', name: 'QUI_NHON', country: 'VN' },
+    { code: 'TUY_HOA', name: 'TUY_HOA', country: 'VN' },
 ];
 
 const setCity = (code: string) => {
@@ -56,7 +56,7 @@ onClickOutside(burgerDropdownRef, () => {
                                 <li v-for="cityItem in cities" :key="cityItem.code" @click="setCity(cityItem.code)">
                                     <span :class="{ 'text-[#0A1C3A99] opacity-60 ': cityItem.code !== selectedCity, }"
                                         class="uppercase text-2xl font-semibold transition-all duration-300">
-                                        {{ cityItem.name }}
+                                        {{ $t(cityItem.name) }}
                                     </span>
                                 </li>
                             </ul>

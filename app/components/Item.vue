@@ -9,9 +9,9 @@ const props = defineProps<{
 
 const statusColor = computed(() => {
     switch (props.status) {
-        case 'Занят':
+        case 'BUSY':
             return 'bg-[#FF383C]'
-        case 'Обслуживание':
+        case 'MAINTENANCE':
             return 'bg-[#B9B9B9]'
         default:
             return 'bg-[#94FFAF]' // Свободен
@@ -31,7 +31,7 @@ const statusColor = computed(() => {
 
         <span class="bg-white z-10 absolute flex items-center gap-x-2 px-2 py-1 rounded-full top-3 right-2">
             <span class="text-sm">
-                {{ status }}
+                {{ $t(status) }}
             </span>
             <span class="w-2.5 h-2.5 rounded-full block" :class="statusColor" />
         </span>

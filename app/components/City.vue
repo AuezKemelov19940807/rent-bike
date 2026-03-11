@@ -13,9 +13,9 @@ onClickOutside(cityDropdownRef, () => {
 })
 
 const cities = [
-    { code: 'NHA_TRANG', name: 'Нячанг', country: 'VN' },
-    { code: 'QUI_NHON', name: 'Куинён', country: 'VN' },
-    { code: 'TUY_HOA', name: 'Туихоа', country: 'VN' },
+    { code: 'NHA_TRANG', name: 'NHA_TRANG', country: 'VN' },
+    { code: 'QUI_NHON', name: 'QUI_NHON', country: 'VN' },
+    { code: 'TUY_HOA', name: 'TUY_HOA', country: 'VN' },
 ];
 
 const setCity = (code: string) => {
@@ -28,14 +28,14 @@ const setCity = (code: string) => {
 <template>
     <div class="relative">
         <div class="flex items-center cursor-pointer select-none" @click="toggleCityDropdown" ref="cityDropdownRef">
-            <span class="uppercase text-lg">{{cities.find(c => c.code === selectedCity)?.name}}</span>
+            <span class="uppercase text-lg">{{ $t(selectedCity) }}</span>
             <span class="w-6 h-6 flex items-center justify-center transition-all duration-300"
                 :class="cityDropdown ? 'rotate-180' : ''">
                 <img src="~/assets/img/arrow-bottom.svg" alt="Arrow Bottom">
             </span>
         </div>
         <Transition>
-            <div class="absolute left-1/2 -translate-x-1/2 mt-6 px-7 py-2 bg-white shadow-card rounded-lg 
+            <div class="absolute w-fit left-1/2 -translate-x-1/2 mt-6 px-7 py-2 bg-white shadow-card rounded-lg 
         before:absolute
         before:left-1/2 
         before:-translate-x-1/2
@@ -49,12 +49,12 @@ const setCity = (code: string) => {
         before:border-b-8 
         before:border-b-white
         " v-if="cityDropdown">
-                <ul class="flex flex-col gap-y-2">
+                <ul class="flex flex-col w-fit gap-y-2">
                     <li class="cursor-pointer" v-for="cityItem in cities" :key="cityItem.code">
-                        <span class="uppercase select-none text-lg"
+                        <span class="uppercase w-fit select-none"
                             :class="{ 'text-[#0A1C3A99] opacity-60 ': cityItem.code !== selectedCity, }"
                             @click="setCity(cityItem.code)">
-                            {{ cityItem.name }}
+                            {{ $t(cityItem.name) }}
                         </span>
                     </li>
                 </ul>

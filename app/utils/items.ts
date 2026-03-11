@@ -11,21 +11,21 @@ export const items = [
     image: hero1,
     model: "Yamaha MT-07",
     icon: bikeIcon1,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 2,
     image: hero2,
     model: "Multistrada 950",
     icon: bikeIcon2,
-    status: "Занят",
+    status: "BUSY",
   },
   {
     id: 3,
     image: hero3,
     model: "Multistrada 950",
     icon: bikeIcon3,
-    status: "Обслуживание",
+    status: "MAINTENANCE",
   },
 
   {
@@ -33,21 +33,21 @@ export const items = [
     image: hero1,
     model: "Honda CB650R",
     icon: bikeIcon1,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 5,
     image: hero2,
     model: "BMW F 900 R",
     icon: bikeIcon2,
-    status: "Занят",
+    status: "BUSY",
   },
   {
     id: 6,
     image: hero3,
     model: "Kawasaki Z900",
     icon: bikeIcon3,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
 
   {
@@ -55,21 +55,21 @@ export const items = [
     image: hero1,
     model: "Yamaha XSR700",
     icon: bikeIcon1,
-    status: "Обслуживание",
+    status: "MAINTENANCE",
   },
   {
     id: 8,
     image: hero2,
     model: "Ducati Monster",
     icon: bikeIcon2,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 9,
     image: hero3,
     model: "Suzuki SV650",
     icon: bikeIcon3,
-    status: "Занят",
+    status: "BUSY",
   },
 
   {
@@ -77,21 +77,21 @@ export const items = [
     image: hero1,
     model: "Honda Africa Twin",
     icon: bikeIcon1,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 11,
     image: hero2,
     model: "BMW GS 850",
     icon: bikeIcon2,
-    status: "Обслуживание",
+    status: "MAINTENANCE",
   },
   {
     id: 12,
     image: hero3,
     model: "KTM 790 Adventure",
     icon: bikeIcon3,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
 
   {
@@ -99,21 +99,21 @@ export const items = [
     image: hero1,
     model: "Yamaha Tenere 700",
     icon: bikeIcon1,
-    status: "Занят",
+    status: "BUSY",
   },
   {
     id: 14,
     image: hero2,
     model: "Ducati DesertX",
     icon: bikeIcon2,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 15,
     image: hero3,
     model: "BMW R NineT",
     icon: bikeIcon3,
-    status: "Обслуживание",
+    status: "MAINTENANCE",
   },
 
   {
@@ -121,21 +121,21 @@ export const items = [
     image: hero1,
     model: "Honda Rebel 1100",
     icon: bikeIcon1,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
   {
     id: 17,
     image: hero2,
     model: "Indian Scout",
     icon: bikeIcon2,
-    status: "Занят",
+    status: "BUSY",
   },
   {
     id: 18,
     image: hero3,
     model: "Harley-Davidson Street 750",
     icon: bikeIcon3,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
 
   {
@@ -143,13 +143,13 @@ export const items = [
     image: hero1,
     model: "Yamaha R7",
     icon: bikeIcon1,
-    status: "Обслуживание",
+    status: "MAINTENANCE",
   },
   {
     id: 20,
     image: hero2,
     model: "Kawasaki Ninja 650",
     icon: bikeIcon2,
-    status: "Свободен",
+    status: "AVAILABLE",
   },
 ];

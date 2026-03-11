@@ -5,7 +5,7 @@
 <template>
     <button class="flex cursor-pointer w-full items-center justify-end  gap-x-2 mb-8">
         <span>
-            Фильтр
+            {{ $t('filter') }}
         </span>
         <span>
             <img src="~/assets/img/filter.svg" alt="Filter Icon">
