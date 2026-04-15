@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   css: ["./app/assets/css/main.css"],
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      apiBase:
+        process.env.API_BASE_URL || "https://rent-bike-api.fly.dev/api/v1",
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },

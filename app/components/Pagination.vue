@@ -16,37 +16,27 @@ const pagination = computed(() => {
     const total = props.totalPages
     const current = props.currentPage
 
-    // если страниц ≤ 4 — показываем все
     if (total <= 4) {
-        for (let i = 1; i <= total; i++) {
-            pages.push(i)
-        }
-        return pages
+        return Array.from({ length: total - 1 }, (_, i) => i + 2)
     }
 
-
-    let start = Math.max(1, current - 1)
+    let start = Math.max(2, current - 1)
     let end = start + 2
-
 
     if (end >= total) {
         end = total
-        start = total - 2
+        start = Math.max(2, total - 2)
     }
-
 
     for (let i = start; i <= end; i++) {
         pages.push(i)
     }
 
-
     if (end < total - 1) {
         pages.push('dots')
     }
 
-    if (end < total) {
-        pages.push(total)
-    }
+    pages.push(total)
 
     return pages
 })

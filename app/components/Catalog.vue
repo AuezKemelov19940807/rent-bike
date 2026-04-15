@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import type { Bike } from '~/utils/types/bike';
 
+
+const props = defineProps<{
+    bikes: Bike[]
+}>()
 
 
 
@@ -11,7 +16,7 @@ const currentPage = ref<number>(1)
 
 // totalPages
 const totalPages = computed(() =>
-    Math.ceil(items.length / perPage)
+    Math.ceil(props.bikes.length / perPage)
 )
 
 // change page
@@ -29,7 +34,8 @@ const goToPage = (page: number) => {
             <!-- filter -->
             <Filter />
             <!-- Items -->
-            <Items :current-page="currentPage" :per-page="perPage" />
+
+            <Items :current-page="currentPage" :per-page="perPage" :bikes="bikes" />
             <!-- pagination -->
             <Pagination :current-page="currentPage" :total-pages="totalPages" @page-changed="goToPage" />
         </div>

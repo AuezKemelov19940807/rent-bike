@@ -5,7 +5,15 @@ import hero3 from '~/assets/img/hero-3.png';
 import bikeIcon1 from "~/assets/img/bike-icon-1.svg";
 import bikeIcon2 from "~/assets/img/bike-icon-2.svg";
 import bikeIcon3 from "~/assets/img/bike-icon-3.svg";
-import type { st } from 'vue-router/dist/router-CWoNjPRp.mjs';
+import type { Bike } from '~/utils/types/bike';
+
+
+const props = defineProps<{
+    bike: Bike
+}>()
+
+
+
 const catalogItemDetailsRef = ref(null);
 const catalogItemDetails = useSwiper(catalogItemDetailsRef, {
     loop: true,
@@ -33,87 +41,66 @@ const catalogItemDetails = useSwiper(catalogItemDetailsRef, {
     },
 })
 
-const slides = ref([
-    {
-        id: 1,
-        image: hero1,
-        icon: bikeIcon1
-    },
-    {
-        id: 2,
-        image: hero2,
-        icon: bikeIcon2
-    },
-    {
-        id: 3,
-        image: hero3,
-        icon: bikeIcon3
-    }
-])
+// const slides = ref([
+//     {
+//         id: 1,
+//         image: hero1,
+//         icon: bikeIcon1
+//     },
+//     {
+//         id: 2,
+//         image: hero2,
+//         icon: bikeIcon2
+//     },
+//     {
+//         id: 3,
+//         image: hero3,
+//         icon: bikeIcon3
+//     }
+// ])
 
+const slides = computed(() => {
+    if (!props.bike) return []
 
-const details = [
-    {
-        id: 1,
-        title: 'Марка',
-        desc: 'Yamaha'
-    },
-    {
-        id: 2,
-        title: 'Модель',
-        desc: 'MT - 07'
-    },
-    {
-        id: 3,
-        title: 'Год',
-        desc: '2021'
-    },
-    {
-        id: 4,
-        title: 'Объем двигателя',
-        desc: '1300 см³'
-    },
-    {
-        id: 5,
-        title: 'Тип байка',
-        desc: 'Спортивный'
-    },
-    {
-        id: 6,
-        title: 'Коробка передач',
-        desc: 'АКПП'
-    },
-    {
-        id: 7,
-        title: 'Категория прав',
-        desc: 'A1'
-    }
-]
+    const photos = props.bike.photos || []
+
+    return [
+        props.bike.main_photo,
+        ...photos.filter(p => p !== props.bike.main_photo)
+    ]
+})
+
 
 const timePeriods = [
-    {
-        id: 1,
-        text: 'Сутки',
-        price: '199'
-    },
-    {
-        id: 1,
-        text: 'Неделю',
-        price: '299'
-    },
-    {
-        id: 1,
-        text: 'Месяц',
-        price: '499'
-    }
-];
+    { id: 'daily', text: 'Сутки' },
+    { id: 'weekly', text: 'Неделя' },
+    { id: 'monthly', text: 'Месяц' }
+]
 
-const activePeriod = ref<number>(0)
-const activePrice = ref(timePeriods[0]?.price ?? '')
+const activePeriod = ref(0)
+
 const changeActivePeriod = (index: number) => {
     activePeriod.value = index
-    activePrice.value = timePeriods[index]?.price ?? ''
 }
+
+const price = computed(() => {
+    if (!props.bike) return 0
+
+    switch (activePeriod.value) {
+        case 0:
+            return props.bike.daily_rental_price
+        case 1:
+            return props.bike.weekly_rental_price
+        case 2:
+            return props.bike.monthly_rental_price
+        default:
+            return props.bike.daily_rental_price
+    }
+})
+
+
+
+
 
 const recomentItems = [
     {
@@ -153,10 +140,31 @@ const toggleDropdown = () => {
     dropdawn.value = !dropdawn.value
 }
 
+const formatDate = (date: string) => {
+    return new Intl.DateTimeFormat('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }).format(new Date(date))
+}
+
+
+const statusColor = computed(() => {
+    switch (props.bike.status) {
+        case 'rented':
+            return 'bg-red-500'
+        case 'maintenance':
+            return 'bg-gray-400'
+        case 'available':
+            return 'bg-green-500'
+        default:
+            return 'bg-gray-300'
+    }
+})
+
 </script>
 
 <template>
-
     <div class="mb-8 md:mb-20">
         <div class="flex flex-col  md:gap-y-0 lg:flex-row gap-x-10 lg:gap-x-14 2xl:gap-x-20">
             <!-- slider -->
@@ -165,11 +173,11 @@ const toggleDropdown = () => {
                     <swiper-container class="h-full min-h-75" ref="catalogItemDetailsRef" :init="false">
                         <swiper-slide v-for="(slide, idx) in slides" :key="idx" class="relative  h-full w-full">
                             <div>
-                                <p
+                                <!-- <p
                                     class="absolute top-4 md:top-10 left-4 md:left-24 z-10 text-3xl w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center  bg-white font-semibold">
                                     <img class="w-6 h-6 md:w-8 md:h-8" :src="slide.icon" alt="">
-                                </p>
-                                <img class="absolute w-full h-full  top-0 left-0 object-cover" :src="slide.image"
+                                </p> -->
+                                <img class="absolute w-full h-full  top-0 left-0 object-cover" :src="slide"
                                     alt="Hero Image">
                             </div>
                         </swiper-slide>
@@ -194,30 +202,60 @@ const toggleDropdown = () => {
             <!-- content -->
             <div class="flex flex-col px-4 lg:px-0 mt-8 2xl:mt-20">
                 <div class="flex items-center gap-x-2 mb-4">
-                    <span>
+                    <!-- <span>
                         <img class="w-8 h-8" :src="bikeIcon1" alt="Brand Icon">
-                    </span>
-                    <h2 class="text-3xl font-medium">Yamaha MT - 07</h2>
+                    </span> -->
+                    <h2 class="text-3xl font-medium"> {{ bike.brand }} {{ bike.model }} </h2>
                 </div>
 
                 <div class="mb-10">
                     <div class="flex flex-col gap-y-4">
-                        <div class="grid grid-cols-2 gap-x-4" v-for="detailItem in details" :key="detailItem.id">
-                            <span class="text-sm text-gray-400">{{ detailItem.title }}</span>
-                            <span>{{ detailItem.desc }}</span>
+
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Марка</span>
+                            <span>{{ bike.brand }}</span>
                         </div>
+
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Модель</span>
+                            <span>{{ bike.model }}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Год</span>
+                            <span>{{ bike.year }}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Объем двигателя</span>
+                            <span>{{ bike.engine_capacity_cc }} см³</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Тип байка</span>
+                            <span>{{ bike.bike_type }}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Коробка передач</span>
+                            <span>{{ bike.transmission }}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-x-4">
+                            <span class="text-sm text-gray-400">Категория прав</span>
+                            <span>{{ bike.license_category }}</span>
+                        </div>
+
                     </div>
 
                 </div>
                 <div class="flex flex-col items-center justify-center lg:items-start lg:justify-start gap-y-4">
                     <div class="text-3xl font-medium flex gap-x-4">
                         <span>Цена</span>
-                        <span>{{ activePrice }}$</span>
+                        <span>{{ price }}$</span>
                     </div>
                     <div class="flex gap-x-2">
-                        <span :class="{ 'bg-black text-white': activePeriod === index }"
-                            class="border cursor-pointer transition-all select-none duration-300 inline-block px-4 py-2 rounded-full"
-                            v-for="(period, index) in timePeriods" :key="period.id" @click="changeActivePeriod(index)">
+                        <span v-for="(period, index) in timePeriods" :key="period.id" @click="changeActivePeriod(index)"
+                            :class="{
+                                'bg-black text-white': activePeriod === index
+                            }"
+                            class="border cursor-pointer transition-all select-none duration-300 inline-block px-4 py-2 rounded-full">
                             {{ period.text }}
                         </span>
                     </div>
@@ -225,16 +263,17 @@ const toggleDropdown = () => {
                     <div
                         class="text-3xl font-medium flex flex-col md:flex-row gap-y-4 items-center justify-center  md:items-start md:justify-start gap-x-4">
                         <span>Цена продажи</span>
-                        <span>5699$</span>
+                        <span>{{ bike.sale_price.toLocaleString() }} $</span>
                     </div>
                     <div class="flex flex-col md:flex-row items-center gap-y-1 gap-x-4 text-lg font-semibold">
                         <div class="text-lg flex gap-x-3.5 items-center font-semibold ">
                             <span>Статус</span>
-                            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                            <span>Занят</span>
+                            <span class="w-2.5 h-2.5 rounded-full" :class="statusColor"></span>
+                            <span> {{ bike.status }} </span>
                         </div>
-                        <span class="bg-green-100 text-green-700 px-4 py-0.5 rounded-full text-sm font-medium ml-2">
-                            Будет доступен с 11 февраля
+                        <span class="bg-green-100 text-green-700 px-4 py-0.5 rounded-full text-sm font-medium ml-2"
+                            v-if="bike.busy_until">
+                            Будет доступен с {{ formatDate(bike.busy_until) }}
                         </span>
                     </div>
 
@@ -276,7 +315,7 @@ const toggleDropdown = () => {
             </div>
         </div>
     </div>
-    <div class="mb-8 md:mb-25">
+    <!-- <div class="mb-8 md:mb-25">
         <div class="container mx-auto px-4 lg:px-5">
             <h3 class="text-3xl font-medium mb-4">Рекомендуем</h3>
             <div
@@ -286,7 +325,7 @@ const toggleDropdown = () => {
             </div>
 
         </div>
-    </div>
+    </div> -->
     <div :class="{ 'fixed left-0 top-0 w-full h-full bg-black z-40 opacity-50 transition-all duration-300': dropdawn }"
         @click="dropdawn = false">
 
