@@ -30,7 +30,7 @@ const bikeSlug = computed(() => {
 </script>
 
 <template>
-    <NuxtLink class="overflow-hidden relative cursor-pointer  transition-shadow duration-1000"
+    <NuxtLink class="overflow-hidden relative cursor-pointer pb-[55%]  transition-shadow duration-1000"
         :to="$localePath(`/catalog/${bikeSlug}`)">
         <!-- <div class="w-8 h-8 bg-white flex items-center   z-10 justify-center absolute top-2 left-2 rounded-full">
             <span class="flex items-center justify-center ">
@@ -47,7 +47,7 @@ const bikeSlug = computed(() => {
         <p class="absolute -left-0.5 z-20 bg-white text-black px-2 py-2 font-semibold -bottom-0.5 rounded-tr-lg">
             {{ brand }} {{ model }}
         </p>
-        <div>
+        <div class="absolute top-0 left-0 w-full h-full">
             <img class="object-cover rounded-lg w-full transition-all duration-1000 h-full " :src="image"
                 alt="Item Image">
         </div>
