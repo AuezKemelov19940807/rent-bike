@@ -14,7 +14,7 @@ const statusColor = computed(() => {
     switch (props.status) {
         case 'rented':
             return 'bg-[#FF383C]'
-        case 'maint':
+        case 'maintenance':
             return 'bg-[#B9B9B9]'
         default:
             return 'bg-[#94FFAF]'
@@ -30,7 +30,7 @@ const bikeSlug = computed(() => {
 </script>
 
 <template>
-    <NuxtLink class="overflow-hidden relative cursor-pointer pb-[55%]  transition-shadow duration-1000"
+    <NuxtLink class="overflow-hidden relative cursor-pointer pb-[70%]  transition-shadow duration-1000"
         :to="$localePath(`/catalog/${bikeSlug}`)">
         <!-- <div class="w-8 h-8 bg-white flex items-center   z-10 justify-center absolute top-2 left-2 rounded-full">
             <span class="flex items-center justify-center ">
