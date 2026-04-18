@@ -161,6 +161,7 @@ const statusColor = computed(() => {
             return 'bg-gray-300'
     }
 })
+const router = useRouter()
 
 </script>
 
@@ -169,6 +170,15 @@ const statusColor = computed(() => {
         <div class="flex flex-col  md:gap-y-0 lg:flex-row gap-x-10 lg:gap-x-14 2xl:gap-x-20">
             <!-- slider -->
             <div class="lg:max-w-1/2 w-full aspect-[1/0.806] relative">
+                <button @click="router.back()"
+                    class="absolute z-20 flex items-center gap-x-2 top-4 left-2 bg-white text-black py-2 px-4 rounded-full hover:bg-gray-200">
+                    <span>
+                        <img class="rotate-90" src="~/assets/img/arrow-bottom.svg" alt="">
+                    </span>
+                    <span>
+                        Вернуться
+                    </span>
+                </button>
                 <ClientOnly>
                     <swiper-container class="h-full min-h-75" ref="catalogItemDetailsRef" :init="false">
                         <swiper-slide v-for="(slide, idx) in slides" :key="idx" class="relative  h-full w-full">

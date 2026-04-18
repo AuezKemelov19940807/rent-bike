@@ -19,6 +19,7 @@ const { data: bike, refresh, pending, error } = await useFetch<Bike>(`/bikes/${i
 </script>
 
 <template>
+
     <CatalogItemDetailsPage v-if="bike" :bike="bike" />
 </template>
 

@@ -433,7 +433,7 @@ const allModelsSelected = (brand: any) => {
                                                                         @click="toggleModel({ name: model.name, brandName: brand.name })">
                                                                         <div class="flex items-center gap-x-2">
                                                                             <span class="text-base">{{ model.name
-                                                                            }}</span>
+                                                                                }}</span>
                                                                         </div>
                                                                         <span
                                                                             class="w-6 h-6 shrink-0 flex items-center justify-center bg-black border border-[#CACACA] rounded-lg"
@@ -580,7 +580,7 @@ const allModelsSelected = (brand: any) => {
 
                         </div>
                     </div>
-                    <FilterBtnView class="" text="Добавить" @click="filterButton = false" />
+                    <FilterBtnView class="" text="Найти" @click="filterButton = false" />
                 </div>
                 <!-- componies selection-->
                 <div class="flex flex-col flex-1" v-if="activeSection === 'company'">
