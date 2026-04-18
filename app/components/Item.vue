@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
+    company: string;
     image: string;
     model: string;
     brand: string;
@@ -32,11 +33,11 @@ const bikeSlug = computed(() => {
 <template>
     <NuxtLink class="overflow-hidden relative cursor-pointer pb-[70%]  transition-shadow duration-1000"
         :to="$localePath(`/catalog/${bikeSlug}`)">
-        <!-- <div class="w-8 h-8 bg-white flex items-center   z-10 justify-center absolute top-2 left-2 rounded-full">
+        <div class=" px-2 bg-white flex items-center   z-10 justify-center absolute top-2 left-2 rounded-full">
             <span class="flex items-center justify-center ">
-                <img class="  " :src="icon" alt="Bike Icon">
+                {{ company }}
             </span>
-        </div> -->
+        </div>
 
         <span class="bg-white z-10 absolute flex items-center gap-x-2 px-2 py-1 rounded-full top-3 right-2">
             <span class="text-sm">
